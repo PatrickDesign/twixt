@@ -18,6 +18,12 @@
 $(document).ready(function ()
 {
 
+
+    var socket = io();
+    
+
+
+
     $("#categorySelect").on("change", function ()
     {
         $("#categoryForm").submit();

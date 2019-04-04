@@ -21,12 +21,16 @@
 }
 
 .navbar-inverse .navbar-nav>li>a {
-  color: black;
+  color: white;
+}
+
+.navbar-nav a{
+  color:white!important;
 }
 
 .navbar-color {
-  background-color: #CBEAB9;
-  color: #CBEAB9;
+  background-color: #891717;
+  color:white;
 }
 
 .alignright {

@@ -21,24 +21,30 @@
 
 
 var express = require("express");
+var jwt = require("jsonwebtoken");
 var dbConnection = require("./connections"); //get db connection
 var app = express();
-var http = require("http").Server(app);
+var http = require("http");
+var server = http.createServer(app);
+var io = require("socket.io").listen(server);
 var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 var mongoose = require("mongoose"),
   passport = require("passport"),
   localStrategy = require("passport-local"),
-  passportLocalMongoose = require("passport-local-mongoose"),
-  expressSession = require("express-session");
-
+  passportLocalMongoose = require("passport-local-mongoose");
+var sharedSession = require("express-socket.io-session");
 //=================Session:
 
-app.use(expressSession(
-{
-  secret: "This is a secrety about my doggie",
-  resave: false,
-  saveUninitialized: false
-}));
+   var session = require("express-session")({
+   
+	secret: "secret",
+	resave: true,
+	saveUninitialized: true
+
+   });
+
+   app.use(session);
 
 
 //=========================
@@ -669,11 +675,12 @@ app.get("/login", (req, res) =>
 
 app.post("/login", passport.authenticate("local",
 {
-  successRedirect: "/",
   failureRedirect: "/login"
 }), (req, res) =>
 {
-
+  console.log("User " + req.user.username + " has logged in...");
+  req.session.user = req.user;
+  res.redirect("/");
 });
 
 app.get("/logout", (req, res) =>
@@ -1137,7 +1144,58 @@ app.post('/addProject', (req, res) =>
 
 });
 
-//END ROUTES=========================
+//END ROUTES========================
+
+
+
+//SOCKET LOGIC======================
+
+//io = io.listen(server);
+io.use(sharedSession(session));
+
+io.set('authorization', (handshakeData, accept) => {
+
+
+//	console.log(handshakeData.headers);
+
+//	if(handshakeData.headers.user)
+//		console.log("hello, " + handshakeData.headers.user.username);
+	
+
+
+	accept(null, true);
+
+
+	/* if(handshakeData.headers.cookie){
+	
+		handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+		handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], 'secret');
+
+		if(handshakeData.cookie['express.sid
+	
+	
+	}*/
+
+});
+
+
+io.on('connection', function(socket){
+
+	if(socket.handshake.session.user)
+		console.log("WELCOME TO TWIXT, " + socket.handshake.session.user.username);
+	else
+		console.log("hello there, friend.");
+
+
+
+
+});
+
+
+//==================================
+
+
+
 
 //Helper functions
 
@@ -1160,4 +1218,4 @@ function isLoggedInFlag(req, res)
 
 //SPINUP SERVER
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log("Serving app..."));
+server.listen(port, () => console.log("Serving app..."));
