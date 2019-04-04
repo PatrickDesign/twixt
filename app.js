@@ -255,7 +255,7 @@ app.get('/conversations/:id', (req, res) => {
 	    if(foundConvo.users.find(user => user._id.equals(foundUser._id)))
 	            return res.render("messages", {conversation: foundConvo});
 	    else{
-	    	    res.send("<h1>You are not in this conversation... get out!");
+	    	    res.send("<h1>You are not in this conversation... get out!</h1>");
 	    }
           }
         });
@@ -1157,8 +1157,28 @@ app.post('/addProject', (req, res) =>
 
 //SOCKET LOGIC======================
 
+//create a conversation namespace. 
+var conversationSpace = io.of('/conversations');
+
 //io = io.listen(server);
-io.use(sharedSession(session));
+conversationSpace.use(sharedSession(session));
+
+
+
+conversationSpace.on('connection', (socket) => {
+	console.log(socket.handshake.session.user.username + " has connected");
+});
+
+conversationSpace.on('convoJoin', (convoId) => {
+	console.log(socket.handshake.session.user.username + " has connected to room: " + convoId);
+	socket.join(convoId);
+});
+
+conversationSpace.on("newMessage", (data) => {
+
+	conversationsSpace.sockets.in(data.convo).emit("messageSent", data.message);
+
+});
 
 io.set('authorization', (handshakeData, accept) => {
 
@@ -1186,7 +1206,7 @@ io.set('authorization', (handshakeData, accept) => {
 });
 
 
-io.on('connection', function(socket){
+/* io.on('connection', function(socket){
 
 	if(socket.handshake.session.user)
 		console.log("WELCOME TO TWIXT, " + socket.handshake.session.user.username);
@@ -1196,7 +1216,7 @@ io.on('connection', function(socket){
 
 
 
-});
+}); */
 
 
 //==================================

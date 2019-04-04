@@ -1,0 +1,41 @@
+//PAGINATION
+
+// $('#pagination-demo').twbsPagination(
+// {
+//     totalPages: 16,
+//     visiblePages: 6,
+//     next: 'Next',
+//     prev: 'Prev',
+//     onPageClick: function (event, page)
+//     {
+//         //fetch content and render here
+//         $('#page-content').text('Page ' + page) + ' content here';
+//     }
+// });
+
+
+//Functinos to run when page loads
+<%
+
+
+    var socket = io('/conversations');
+	
+    socket.emit('convoJoin', conversation._id);
+    
+    socket.emit('newMessage', {message: "Hello there!", convo: conversation_id});
+
+    socket.on('messageSent', () => {
+    	console.log(currentUser.username + " has received a message!");
+    });
+
+
+    $("#categorySelect").on("change", function ()
+    {
+        $("#categoryForm").submit();
+
+    });
+
+
+
+
+%>
