@@ -249,8 +249,15 @@ app.get('/conversations/:id', (req, res) => {
         {
           if(err)
             console.log(err)
-          else
-            return res.render("messages", {conversation: foundConvo});
+          else{
+
+	    //check if the current user is in the conversation:
+	    if(foundConvo.users.find(user => user._id.equals(foundUser._id)))
+	            return res.render("messages", {conversation: foundConvo});
+	    else{
+	    	    res.send("<h1>You are not in this conversation... get out!");
+	    }
+          }
         });
 
 
