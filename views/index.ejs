@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Source_home</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+
+<% include partials/sourceHeader %>
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+      <div class="item active">
+        <img src="field.jpg" alt="Image">
+        <div class="carousel-caption">
+        <div class= "item-mod">
+          <h1>Make a difference!</h1>
+          <h3>Source is the best and most successful crowdfunding platform aimed specifically at accomplishing SDG goals.</h3>
+          <a href="/explore" class="btn btn-lg btn-primary">Explore Projects</a>
+
+        </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img src="/dude.jpg" alt="Image">
+        <div class="carousel-caption">
+        <div class= "item-mod">
+          <h1>The 17 Sustainable Development Goals</h1>
+          <a href="/about" class="btn btn-lg btn-primary">Find out more</a>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+</div>
+<div class="container">
+
+    <!-- Page Heading -->
+    <h1 class="my-4" style= "padding-top:3%; padding-bottom: 3%;text-align:center;">Top Projects
+    </h1>
+    <!-- col-lg-4 col-sm-6 mb-4" -->
+    <div class="container-fluid content-row" style = "display:flex;">
+
+    <% for(var i = 0; i < 3; i++){ %>
+      <div class="col-sm-12 col-lg-4 align-items-stretch d-flex" style = "display:inline-block;">
+        <div class="card h-100">
+            <div class = "parent">
+              <img class="img1" src = "<%= projects[i].coverPath %>"/>
+              <img class="SDG" src = "icons/<%= projects[i].sdgCategory %>.png" />
+            </div>
+            <div class="card-body">
+            <h4 class="card-title" style = "text-align:center;">
+              <a href="projects/<%= projects[i]._id %>"><%= projects[i].name %></a>
+            </h4>
+            <div class = " row money-goal">
+                <h2 style = "text-align: center;">$<%= projects[i].earnings %> out of $<%= projects[i].goal %></h2>
+                <div class="progress indexProgressBar">
+                        <div class="progress-bar" role="progressbar" style="width: <%= projects[i].earnings/projects[i].goal * 100 %>%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <p class="card-text" style = "padding-top:5%;"><%= projects[i].description.substring(0,200) %>...</p>
+            </div>
+        </div>
+      </div>
+    <% }; %>
+  </div>
+</div>
+	<!-- Start About Area -->
+	<section class="about-area section-gap">
+      <div class="container container-pad">
+        <div class="row align-items-center justify-content-start center-row right-buff paddingtop">
+          <div class="col-lg-5 about-left">
+            <img class="img-fluid" src="brainstorm.jpg" alt="">
+          </div>
+          <div class="col-lg-4 col-md-4 about-right">
+            <div class="section-title pad-left">
+              <h2 class="mb-4 paddingtop" style = "font-weight:bold;">
+                Look For Projects! </h2>
+            </div>
+            <div class="mb-35 wow fadeIn pad-left" data-wow-duration=".8s" data-wow-delay=".3s">
+              <p>We have created a platform that helps you find projects that you believe in.
+              </p>
+            </div>
+            <a href="/explore" class="primary-btn" data-text="Read More">
+              <p class = "pad-left ">Look For Projects</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+<!-- End of About Area -->
+
+<!-- Success Stories -->
+<div class="container" style = "padding-bottom: 5%;">
+    <!-- Page Heading -->
+    <h1 class="my-4" style= "text-align:center;padding-bottom:2%;padding-top:2%;">Success Stories
+      </h1>
+      <!-- col-lg-4 col-sm-6 mb-4" -->
+  <div class="container-fluid content-row" style = "display:flex;">
+
+    <% for(var i = 0; i < 3; i++){ %>
+      <div class="col-sm-12 col-lg-4 align-items-stretch d-flex" style = "display:inline-block;">
+        <div class="card h-100">
+            <div class = "parent">
+              <img class="img1" src = "<%= finishedProjects[i].coverPath %>"/>
+              <img class="SDG" src = "icons/<%= finishedProjects[i].sdgCategory %>.png"/>
+            </div>
+            <div class="card-body">
+            <h4 class="card-title" style = "text-align:center;">
+              <a href="projects/<%= projects[i]._id %>"><%= finishedProjects[i].name %></a>
+            </h4>
+            <div class = " row money-goal">
+                <h2 style = "text-align: center;">$<%= finishedProjects[i].earnings %> out of $<%= finishedProjects[i].goal %></h2>
+            </div>
+            <p class="card-text"><%= finishedProjects[i].description.substring(0,200) %>...</p>
+            </div>
+        </div>
+      </div>
+    <% }; %>
+  </div>
+</div>
+<!-- End of Success Stories -->
+<% if(currentUser){ %>
+<!--Social-->
+
+  <% include partials/socialMedia %>
+<!--End Social-->
+<% } %>
+
+<!-- Find Team & Become Member -->
+<div class="container buttons-div container-pad-team paddingtop" >
+    <div class="row align-items-center justify-content-start center-row right-buff">
+        <div class="col-lg-6 about-left" style = "text-align: center;">
+          <h2>Find A Project</h2>
+            <button type="button" class="btn btn-secondary" onclick = "window.location.href = 'explore';">Explore</button>
+        </div>
+        <div class="vertical-line vert"></div>
+        <div class = "pad"></div>
+        <div class="col-lg-4 col-md-4">
+          <div class="section-title pad-left" style = "text-align:center;">
+            <h2 class="mb-4" style = "text-align: center;">
+              Become A Member</h2>
+              <button type="button" class="btn btn-secondary"onclick = "window.location.href = 'register';">Sign Up Now!</button>
+          </div>
+        </div>
+      </div>
+
+
+</div>
+</div>
+<!-- End Find Team & Become Member -->
+
+
+<% include partials/sourceFooter %>

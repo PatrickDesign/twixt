@@ -1,0 +1,604 @@
+/* Start NavBar */
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.navbar-nav {
+  font-size: 170%;
+}
+
+.navbar-source {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+  font-size: 250%;
+
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: black;
+}
+
+.navbar-color {
+  background-color: #CBEAB9;
+  color: #CBEAB9;
+}
+
+.alignright {
+  float: right;
+}
+
+.aligncenter {
+  float: center;
+}
+
+.item-mod {
+  margin-bottom: 12em;
+}
+
+.card-social {
+  display: inline-block;
+}
+
+.card-social .glyphicon-user {
+  margin-top: 2%;
+  margin-left: 5px;
+  font-size: 30px;
+}
+
+/* Hide the carousel text when the screen is less than 600 pixels wide */
+
+@media (max-width: 600px) {
+  .carousel-caption {
+    display: none;
+  }
+}
+
+/* End Nav Bar */
+
+/* Start Project Section */
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.the-button {
+  background-color: lightgrey;
+  border: none;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.logo {
+  height: 50px;
+  padding-bottom: 15px;
+}
+
+.parent {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.img1 {
+  width: 100%;
+  height: 17em;
+}
+
+.imgexplore {
+  width: 100%;
+  height: 14em;
+}
+
+.SDG {
+  height: 25%;
+  width: 20%;
+  position: absolute;
+  top: 7%;
+  left: 75%;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 30%;
+}
+
+/* Add a gray background color and some padding to the footer */
+
+footer {
+  background-color: #f2f2f2;
+  padding: 25px;
+}
+
+.item {
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.fa-map-marker {
+  color: black;
+  float: left;
+  font-size: 2em;
+  padding-left: 2em;
+  vertical-align: middle;
+}
+
+/* End Projects Section */
+
+/* Start 'Find Your Team' Section */
+
+.img-fluid {
+  height: 100%;
+  width: 100%;
+}
+
+.about-area .section-gap {
+  padding-top: 100%;
+}
+
+.container-pad {
+  padding-top: 3%;
+}
+
+.container-pad-team {
+  padding-top: 2%;
+  padding-bottom: 3%;
+}
+
+.pad-left {
+  padding-left: 20%;
+}
+
+.center-row {
+  display: flex;
+  align-items: center;
+}
+
+.right-buff {
+  padding-left: 5%;
+}
+
+.vert {
+  width: 4px;
+  background-color: black;
+  height: 200px;
+  float: left;
+}
+
+/* End 'Find Your Team' Section */
+
+/* Start Info Buttons */
+
+.buttons-div {
+  border-top-style: solid;
+  /* padding-top: 10%; */
+  border-bottom-style: solid;
+}
+
+/* End Info Buttons */
+
+.mainPageContainer {
+  margin-top: 150px;
+  margin-bottom: 200px;
+}
+
+
+
+.card-font {
+  font-size: 60%;
+}
+
+/* Project Page */
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+}
+
+.team-image {
+  width: 70%;
+  height: 100%;
+}
+
+.green {
+  background-color: #CBEAB9;
+  color: black;
+}
+
+.backit-button {
+  width: 20.75em;
+  height: 2.5em;
+  font-size: 28px;
+}
+
+.paddingtop {
+  padding-top: 5%;
+}
+
+.paddingbottom {
+  padding-bottom: 5%;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* Meet the Team */
+
+.column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+/* Display the columns below each other instead of side by side on small screens */
+
+@media screen and (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+/* Add some shadows to create a card effect */
+
+/* .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+} */
+
+/* Some left and right padding inside the container */
+
+.container {
+  padding: 0 16px;
+}
+
+/* Clear floats */
+
+.container::after,
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 30%;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+.teamphoto {
+  height: 20em;
+}
+
+/* comment */
+
+body {
+  margin-top: 20px;
+}
+
+.comment-wrapper .panel-body {
+  max-height: 650px;
+  overflow: auto;
+}
+
+.comment-wrapper .media-list .media img {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #e5e7e8;
+}
+
+.comment-wrapper .media-list .media {
+  border-bottom: 1px dashed #efefef;
+  margin-bottom: 25px;
+}
+
+.loginSquare {
+  width: 50%;
+  padding: 15px;
+  display: inline-block;
+  margin: 50px;
+  justify-content: center;
+}
+
+/* End comment section */
+
+.grid-container {
+  display: inline-grid;
+  grid-column-gap: 15px;
+  grid-template-columns: auto auto auto;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.grid-item {
+  border-radius: 5px;
+  font-size: 20px;
+  /* grid-column: 2; */
+  /* grid-row: 2 / 5; */
+}
+
+
+input,
+button {
+  color: black;
+}
+
+/* Social buttons */
+
+.social-button {
+  display: inline-block;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  font: 16px Roboto, sans-serif;
+}
+
+.social-button a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.c-icon {
+  width: 36px;
+  height: 36px;
+  fill: currentColor;
+  transition: .2s;
+}
+
+.c-link--facebook:hover {
+  color: #3b5998
+}
+
+.c-link--twitter:hover {
+  color: #55acee
+}
+
+.c-link--google:hover {
+  color: #dd4b39
+}
+
+.c-link--pinterest:hover {
+  color: #bd081c
+}
+
+.c-link--instagram:hover {
+  color: #833ab4
+}
+
+.c-link--snapchat:hover {
+  color: #fbe00f
+}
+
+.c-link--facebook:hover::after {
+  background: #3b5998
+}
+
+.c-link--twitter:hover::after {
+  background: #55acee
+}
+
+.c-link--google:hover::after {
+  background: #dd4b39
+}
+
+.c-link--pinterest:hover::after {
+  background: #bd081c
+}
+
+.c-link--instagram:hover::after {
+  background: #833ab4
+}
+
+.c-link--snapchat:hover::after {
+  background: #fbe00f
+}
+
+.c-link {
+  position: relative;
+  color: #bbb;
+}
+
+.c-link:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+.c-tooltip::before,
+.c-tooltip::after {
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  opacity: 0;
+  transition: .2s;
+}
+
+.c-tooltip::before {
+  content: '';
+  bottom: calc(100% + 2px);
+  border: solid 5px transparent;
+  border-top-color: currentColor;
+}
+
+.c-tooltip::after {
+  content: attr(aria-label);
+  bottom: calc(100% + 12px);
+  padding: .61em .93em;
+  font-size: .875rem;
+  color: white;
+  border-radius: 3px;
+}
+
+.c-tooltip:hover::before,
+.c-tooltip:hover::after {
+  opacity: 1;
+  transform: translate(-50%);
+}
+
+.pens-link-container {
+  flex-basis: 100%;
+  font-size: .9rem;
+  text-align: center;
+}
+
+.pens-link {
+  margin-bottom: 0;
+  background: white;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .1);
+  border: none;
+}
+
+/* End Social */
+
+/* Pagination */
+
+#pagination-demo {
+  display: inline-block;
+  margin-bottom: 1.75em;
+}
+
+#pagination-demo li {
+  display: inline-block;
+}
+
+.page-content {
+  background: #eee;
+  display: inline-block;
+  padding: 10px;
+  width: 100%;
+  max-width: 660px;
+}
+
+.wrapper {
+  margin: 60px auto;
+  text-align: center;
+}
+
+/* End pagination */
+
+/*SOCIAL*/
+
+.card-inner {
+  margin-left: 4rem;
+}
+
+.indexProgressBar {
+  width: 80%;
+  margin: 0 auto;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  color: black;
+  margin: 0px 15px 15px 15px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: large;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.userMetric {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.userMetricElement {
+  color: black;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.userMetricElement:hover {
+  background-color: #f1f1f1;
+}
+
+.layoutButton {
+  border-style: solid;
+  font-size: 2em;
+  color: black;
+  padding-left: 15%;
+  padding-right: 15%;
+  white-space: nowrap;
+}
+
+
+.grid-item {
+  max-width: 400px;
+}
+
+.commentContainer {
+  padding: 15px;
+}
+
+.money-goal {
+  vertical-align: middle;
+  align-items: center;
+}
+
+.updateImage {
+  width: 500px!important;
+  height: 250px!important;
+}
+
+.updateImageContainer {
+  margin: 0 auto;
+  padding: 15px;
+  text-align: center;
+}
+
+.userFollowButton{
+  display:inline-block;
+}

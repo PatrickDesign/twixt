@@ -1,0 +1,122 @@
+
+<% include partials/sourceHeader %>
+<h1><img src="<%= currentUser.avatar%>" width="90" alt="" class="img-circle">  <%= currentUser.username %></h1>
+<h4><%=user.bio%></h4>
+<hr style="border: 3px solid;">
+<h2>Total Money Contributed: $ <%= currentUser.contributed %></h2>
+<hr>
+<div class="userMetric" onclick="toggle_visibility('proj_create');"><h3>Projects Created <i class="fa fa-caret-down"></i> </h3></div>
+<div id="proj_create" style="display:none;">
+  <hr>
+  <% user.ownedProjects.forEach((project) => { %>
+    <div class="userMetricElement"> <a href="projects/<%= project._id %>"><%= project.name %></a> </div>
+  <% }); %>
+</div>
+<hr>
+<!-- <div class="userMetric" onclick="toggle_visibility('proj_contrib');"><h3>Projects Contributed Towards <i class="fa fa-caret-down"></i> </h3></div>
+<div id="proj_contrib" style="display:none;">
+  <hr>
+  <div class="userMetricElement">Project Name 1</div>
+  <div class="userMetricElement">Project Name 2</div>
+  <div class="userMetricElement">Project Name 3</div>
+</div>
+<hr> -->
+<div class="userMetric" onclick="toggle_visibility('proj_follow');"><h3>Projects Followed <i class="fa fa-caret-down"></i> </h3></div>
+<div id="proj_follow" style="display:none;">
+  <hr>
+  <% user.followedProjects.forEach((project) => { %>
+    <div class="userMetricElement"> <a href="projects/<%= project._id %>"><%= project.name %></a> </div>
+  <% }); %>
+</div>
+<hr>
+
+<div class="userMetric" onclick="toggle_visibility('proj_comments');"><h3>Comments Made <i class="fa fa-caret-down"></i> </h3></div>
+<div id="proj_comments" style="display:none;">
+  <hr>
+ <!--  <div class="userMetricElement">Comment 1</div>
+  <div class="userMetricElement">Comment 2</div>
+  <div class="userMetricElement">Comment 3</div> -->
+  <% include partials/userComments %>
+</div>
+
+<hr>
+
+<div class="userMetric" onclick="toggle_visibility('followers');"><h3>Followers <i class="fa fa-caret-down"></i> </h3></div>
+<div id="followers" style="display:none;">
+  <hr>
+ <!--  <div class="userMetricElement">Comment 1</div>
+  <div class="userMetricElement">Comment 2</div>
+  <div class="userMetricElement">Comment 3</div> -->
+  <% var followerSource = user.followers %>
+  <% include partials/userList %>
+</div>
+
+<hr>
+
+
+<div class="userMetric" onclick="toggle_visibility('following');"><h3>Following <i class="fa fa-caret-down"></i> </h3></div>
+<div id="following" style="display:none;">
+  <hr>
+ <!--  <div class="userMetricElement">Comment 1</div>
+  <div class="userMetricElement">Comment 2</div>
+  <div class="userMetricElement">Comment 3</div> -->
+  <% var followerSource = user.followedUsers %>
+  <% include partials/userList %>
+</div>
+
+<hr>
+
+<div class="userMetric" onclick="toggle_visibility('user_details');"><h3>User details <i class="fa fa-caret-down"></i> </h3></div>
+<div id="user_details" style="display:none;">
+  <hr>
+
+  <form method="POST" action="/users/<%= currentUser._id %>/update">
+
+  <form action="/register" method="POST">
+    <h1>Update your account details:</h1>
+    <p>Modify your avatar or account bio!</p>
+    <hr>
+    <p><strong>Username:</strong> <%= currentUser.username %></h3>
+    <p><strong>Email:</strong> <%= currentUser.email %></p><br>
+    
+    <!--buttons-->
+    
+    <% include partials/avatarChoices %>
+
+
+    <div class="form-group">
+    <label for="comment">Bio:</label>
+    <textarea required class="form-control" rows="5" name="userBio" placeholder="Tell the community about yourself ..."><%= currentUser.bio %></textarea>
+    </div>     
+
+    <!--<label for="password"><b>Confirm Password</b></label><br>-->
+    <!--<input id="password"  class = "form-control" type="password" name="password" placeholder="Password..."/><br>-->
+    <div>
+    <label class="radio-inline"><input type="checkbox" name="sendEmails" checked>Keep me up to date with the projects I am following or funding via emails</label>
+    </div>
+    <br>
+    <button style="margin-top: 5px;" class="btn btn-primary" onclick="validate()">Update your account!</button>
+  </form>
+</div>
+
+  </form>
+
+
+<hr>
+
+
+<script type="text/javascript">
+
+    function toggle_visibility(id) {
+       var x = document.getElementById(id);
+       if(x.style.display == 'block')
+          x.style.display = 'none';
+       else
+          x.style.display = 'block';
+    }
+</script>
+
+<% include partials/sourceFooter %>
+
+
+

@@ -1,0 +1,39 @@
+<div class="row bootstrap snippets center" style="padding-top:7%;display: inline-block;">
+        <div>
+            <div class="comment-wrapper">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                    Past comments:
+                    </div>
+                    <div class="panel-body">
+                        
+                        
+                        <hr>
+                        <ul class="media-list">
+
+                        <% user.comments.forEach((comment) => { %>
+                        
+                            <li class="media commentContainer">
+                                <a href="#" class="pull-left">
+                                    <img src="<%=comment.author.avatar%>" alt="" class="img-circle">
+                                </a>
+                                <div class="media-body">
+                                    <span class="text-muted pull-right">
+                                        <small class="text-muted"><%= comment.timePosted.toLocaleDateString("en-US") %></small>
+                                    </span>
+                                    <strong class="text-success">Comment left on project: <a href="/projects/<%= comment.project._id %>"><%=comment.project.name%></a></strong>
+                                    <p>
+                                        <%= comment.text %> </a>.
+                                    </p>
+                                    <span>Comment Rank: <%= comment.rating %></span>
+                                    
+                            </li>
+                        
+                        <% }); %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
