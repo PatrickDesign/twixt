@@ -248,7 +248,7 @@ app.get('/conversations/:id', (req, res) => {
 
       //Look for conversation with id
         //find the conversation and render the page
-        Conversation.findById(req.params.id).populate({path: "user"}).populate({path: "messages", populate: {path: "author"}}).exec((err, foundConvo) =>
+        Conversation.findById(req.params.id).populate({path: "users"}).populate({path: "messages", populate: {path: "author"}}).exec((err, foundConvo) =>
         {
           if(err)
             console.log(err)
