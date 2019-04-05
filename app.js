@@ -103,55 +103,55 @@ app.get('/conversations', (req, res) => {
 });
 
 
-//send message
-app.post('/sendMessage/:id', (req, res) => {
+// //send message
+// app.post('/sendMessage/:id', (req, res) => {
 
-  //Find conversation and add the new message
-  Conversation.findById(req.params.id).populate({path: "messages", populate: {path: "author"}}).exec((err, foundConvo) => {
+//   //Find conversation and add the new message
+//   Conversation.findById(req.params.id).populate({path: "messages", populate: {path: "author"}}).exec((err, foundConvo) => {
 
-    if(err)
-      console.log(err);
-    else{
-      //add new message to conversation
+//     if(err)
+//       console.log(err);
+//     else{
+//       //add new message to conversation
 
-      //Find the user who is the author
-      User.findById(req.user._id, (err, foundUser) => {
-
-
-        if(err)
-          console.log(err);
-        else{
-
-          //create message
-           Message.create(
-            {
-              author: foundUser,
-              messageText: req.body.messageText
-            }, (err, newMessage) => {
-
-              //Now we have a created message. We must now add it 
-                //to the conversation.
-
-                foundConvo.messages.unshift(newMessage);
-                foundConvo.save();
-                return res.redirect('/conversations/' + foundConvo._id)
-
-            });
-        }
+//       //Find the user who is the author
+//       User.findById(req.user._id, (err, foundUser) => {
 
 
-      });
+//         if(err)
+//           console.log(err);
+//         else{
+
+//           //create message
+//            Message.create(
+//             {
+//               author: foundUser,
+//               messageText: req.body.messageText
+//             }, (err, newMessage) => {
+
+//               //Now we have a created message. We must now add it 
+//                 //to the conversation.
+
+//                 foundConvo.messages.unshift(newMessage);
+//                 foundConvo.save();
+//                 return res.redirect('/conversations/' + foundConvo._id)
+
+//             });
+//         }
+
+
+//       });
 
      
 
-    }
+//     }
 
-  });
+//   });
   
 
-  //check if the user is in the conversations user list.  
+//   //check if the user is in the conversations user list.  
 
-});
+// });
 
 
 
@@ -1166,19 +1166,70 @@ conversationSpace.use(sharedSession(session));
 
 
 conversationSpace.on('connection', (socket) => {
-	console.log(socket.handshake.session.user.username + " has connected");
+	console.log(socket.handshake.session.user.username + " has connected!");
+
+  socket.on('convoJoin', (data) => {
+    console.log(socket.handshake.session.user.username + " has connected to room: " + data.convoID);
+    socket.join(data.convoID);
+  });
+
+  socket.on("newMessage", (data) => {
+
+    //Find conversation and add the new message
+    Conversation.findById(data.convo).populate({path: "messages", populate: {path: "author"}}).exec((err, foundConvo) => {
+
+      if(err)
+        console.log(err);
+      else{
+        //add new message to conversation
+
+        //Find the user who is the author
+        User.findById(socket.handshake.session.user._id, (err, foundUser) => {
+
+
+          if(err)
+            console.log(err);
+          else{
+
+            //create message
+             Message.create(
+              {
+                author: foundUser,
+                messageText: data.message
+              }, (err, newMessage) => {
+
+                //Now we have a created message. We must now add it 
+                  //to the conversation.
+
+                  foundConvo.messages.unshift(newMessage);
+                  foundConvo.save();
+                  // return res.redirect('/conversations/' + foundConvo._id)
+
+                  socket.broadcast.to(data.convo).emit("incomingMessage", {message: data.message, user: foundUser});
+
+
+              });
+          }
+
+
+        });
+      }
+
+
+    });
+  
+
+  //check if the user is in the conversations user list.  
+
+
+
+
+    console.log("new message");
+    conversationSpace.to(data.convo).emit("messageSent", data.message);
+  });
 });
 
-conversationSpace.on('convoJoin', (convoId) => {
-	console.log(socket.handshake.session.user.username + " has connected to room: " + convoId);
-	socket.join(convoId);
-});
 
-conversationSpace.on("newMessage", (data) => {
-
-	conversationsSpace.sockets.in(data.convo).emit("messageSent", data.message);
-
-});
 
 io.set('authorization', (handshakeData, accept) => {
 

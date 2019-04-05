@@ -4,7 +4,68 @@
   <p>Source 2019™</p>
 </footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<% include twixtSockets %>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+	var socket = io('/conversations');
+
+	socket.emit('convoJoin', {convoID: "<%= conversation._id %>"});
+
+	$(".conversationForm").on("submit", function(e){
+
+		e.preventDefault();
+		var newMessage = `<li class='media commentContainer'>
+                                <a href='/users/<%=currentUser._id%>' class='pull-left'>
+                                    <img src='<%= currentUser.avatar %>' alt='' class='img-circle'/> 
+                                </a>
+                                <div class='media-body'>
+                                    <p>` +
+                                        $(".messageForm").val()
+                                        + `
+                                    </p>
+                                </div>
+                            </li>`;
+        $(".conversationList").prepend(newMessage);
+
+		socket.emit('newMessage', {message: $(".messageForm").val(), convo: "<%=conversation._id%>"});
+
+		$(".messageForm").val("");
+
+
+
+	});
+
+	socket.on("incomingMessage", (data) => {
+		var newMessage = `<li class='media commentContainer'>
+                                <a href='/users/` + data.user._id + `' class='pull-left'>
+                                    <img src='` + data.user.avatar + `' alt='' class='img-circle'/> 
+                                </a>
+                                <div class='media-body'>
+                                    <p>` +
+                                        data.message
+                                        + `
+                                    </p>
+                                </div>
+                            </li>`;
+		$(".conversationList").prepend(newMessage);
+	});
+
+	// socket.emit('newMessage', {message: "Hello there!", convo: "<%=conversation._id%>"});
+
+	// socket.on('messageSent', (data) => {
+	// 	console.log("<%= currentUser.username %> has received a message!");
+	// });
+
+
+	$("#categorySelect").on("change", function ()
+	{
+	    $("#categoryForm").submit();
+
+	});
+
+
+
+</script>
 </body>
 </html>

@@ -7,15 +7,15 @@
                         <hr>
                     </div>
                     <div class="panel-body">
-                    <form action="/sendMessage/<%= conversation._id %>" method="POST">
-                        <textarea class="form-control" placeholder="Send a message to  %>" rows="3" name="messageText"></textarea>
+                    <form action="/sendMessage/<%= conversation._id %>" method="POST" class="conversationForm">
+                        <textarea class="form-control messageForm" placeholder="Send a message to  %>" rows="3" name="messageText"></textarea>
                         <br>
                         <button>Submit</button>
                         <div class="clearfix">
                     </form>
                         
 
-                        <ul class="media-list">
+                        <ul class="media-list conversationList">
 
                         <% conversation.messages.forEach((message) => { %>
                         
@@ -25,7 +25,7 @@
                                 </a>
                                 <div class="media-body">
                                     <p>
-                                        <%= message.messageText %> </a>
+                                        <%= message.messageText %> 
                                     </p>
                                 </div>
                             </li>
@@ -38,4 +38,4 @@
             </div>
         </div>
     </div>
- <% include sourceFooter %>
+ <% include chatInclude %>
