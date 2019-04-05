@@ -19,10 +19,6 @@ $(document).ready(function ()
 {
 
 
-    var socket = io();
-    
-
-
 
     $("#categorySelect").on("change", function ()
     {
@@ -30,6 +26,16 @@ $(document).ready(function ()
 
     });
 
+    
+
+	$(".messageForm").on("keyup", function(e){
+
+    	if(e.keyCode === 13){
+    		e.preventDefault();
+    		$("#messageSubmit").click()
+    	}
+
+    });
 
 
 

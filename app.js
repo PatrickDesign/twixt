@@ -237,6 +237,9 @@ app.post('/findConvo/:id', (req, res) => {
 //Show the conversation of user with 'id'
 app.get('/conversations/:id', (req, res) => {
 
+  if(!req.user)
+    return res.redirect('/');
+
   User.findById(req.user._id).populate("conversations").exec((err, foundUser) => {
 
     if(err)

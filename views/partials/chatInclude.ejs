@@ -12,6 +12,8 @@
 
 	socket.emit('convoJoin', {convoID: "<%= conversation._id %>"});
 
+
+	//send a message
 	$(".conversationForm").on("submit", function(e){
 
 		e.preventDefault();
@@ -36,6 +38,7 @@
 
 	});
 
+	//receive a message
 	socket.on("incomingMessage", (data) => {
 		var newMessage = `<li class='media commentContainer'>
                                 <a href='/users/` + data.user._id + `' class='pull-left'>
