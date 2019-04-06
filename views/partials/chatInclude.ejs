@@ -11,9 +11,6 @@
 
 	var socket = io('/conversations');
 
-	var typingTimeout,
-		timeoutCleared = true;
-
 	socket.emit('convoJoin', {convoID: "<%= conversation._id %>"});
 
 
@@ -35,13 +32,16 @@
 	});
 
 	socket.on('friendIsNotInConvo', () => {
-		// alert("NOT IN CONVO");
 		$("#inConvoIndicator").text(`<%= friend.username %> is not in the convo...`);
 	});
 
 	//================================================================
 
 	//User is typing notification=====================================
+
+	var typingTimeout,
+		timeoutCleared = true;
+
 	$(".messageForm").on("keydown", function(){
 
     	// if(e.keyCode === 13){
@@ -50,7 +50,7 @@
     	// }
 
     	if(timeoutCleared){
-    		socket.emit('imTyping', {user: currentUser, convo: "<%= conversation._id %>"});
+    		socket.emit('imTyping', {user: "<%= currentUser.username %>", convo: "<%= conversation._id %>"});
     		timeoutCleared = false;
     		typingTimeout = setTimeout(() => {
     			timeoutCleared = true;
@@ -60,23 +60,21 @@
     });
 
 
+	var friendTypingTimeout,
+		friendTimeoutCleared = true;
+
 	//Flash '<username> is typing'
-    socket.on('friendTyping', (data) => {
+    socket.on('friendTyping', (username) => {
 
-    	$("#typingNotification").text(`${data.user.username} is typing...`);
+    	if(friendTimeoutCleared){
+	    	if($("#typingNotification").is(":visible"))
+	    		$("#typingNotification").fadeOut(2000);
+	    	$("#typingNotification").text(`${username} is typing...`);
 
-    	var typeFlash = setInterval(() => {
-    		$("#typingNotification").fadeIn("slow", () => {
-    			$("#typingNotification").fadeOut("slow");
-    		});
-    	}, 500);
-
-    	//after 3 seconds, stop the above interval flashing.
-    	var clearTypeNotification = setTimeout(() => {
-    		clearInterval(typeFlash);
-    		$("#typingNotification").fadeOut("slow");
-    	}, 3000);
-
+	    	$('#typingNotification').delay(500).fadeIn(800, function() {
+		      $(this).delay(1000).fadeOut(800);
+		   });
+	    }
     });
 
 	//================================================================

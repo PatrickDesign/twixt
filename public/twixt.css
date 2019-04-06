@@ -606,3 +606,11 @@ button {
 .userFollowButton{
   display:inline-block;
 }
+
+#typingNotification{
+  display:none;
+}
+
+#typingContainer{
+  height:15px;
+}

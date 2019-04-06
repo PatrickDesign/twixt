@@ -1237,9 +1237,8 @@ conversationSpace.on('connection', (socket) => {
 
   //When a user is typing
   socket.on('imTyping', (data) => {
-
     //emit friendTyping
-    conversationSpace.to(data.convo).emit("friendTyping", data.user)
+    socket.broadcast.to(data.convo).emit("friendTyping", data.user)
   });
 
 
@@ -1258,11 +1257,8 @@ conversationSpace.on('connection', (socket) => {
       // if(typeof friend === 'object'){
       if(friend)
         conversationSpace.connected[socket.id].emit('friendIsInConvo', {user: conversationSpace.connected[friend].handshake.session.user});
-      
-      else{
+      else
         conversationSpace.connected[socket.id].emit('friendIsNotInConvo');
-        console.log('emitting');
-      }
 
       // clients.forEach((client) => {
       //   console.log(conversationSpace.connected[client].handshake.session.user._id);
