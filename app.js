@@ -17,9 +17,15 @@
 
 //populate social feed with something.
 
+//APRIL 5 TODOS:
+  //Implement the backend for 'user is typing' in coversations //Prototyped :)
+  //Implement 'user is online' whenever a user is online (on any part of the site, not just the conversation page)
+    //Although, we should also create a notification like snapchat that shows if the other user IS in the convo page 
+      //at the time. //Prototyped :)
 
 
 
+//Includes====================================================
 var express = require("express");
 var jwt = require("jsonwebtoken");
 var dbConnection = require("./connections"); //get db connection
@@ -34,6 +40,8 @@ var mongoose = require("mongoose"),
   localStrategy = require("passport-local"),
   passportLocalMongoose = require("passport-local-mongoose");
 var sharedSession = require("express-socket.io-session");
+//End Includes=================================================
+
 //=================Session:
 
    var session = require("express-session")({
@@ -1176,6 +1184,7 @@ conversationSpace.on('connection', (socket) => {
     socket.join(data.convoID);
   });
 
+  //Handles all database steps to save the message 
   socket.on("newMessage", (data) => {
 
     //Find conversation and add the new message
@@ -1220,18 +1229,70 @@ conversationSpace.on('connection', (socket) => {
 
 
     });
-  
 
-  //check if the user is in the conversations user list.  
-
-
-
-
-    console.log("new message");
     conversationSpace.to(data.convo).emit("messageSent", data.message);
   });
+
+
+
+  //When a user is typing
+  socket.on('imTyping', (data) => {
+
+    //emit friendTyping
+    conversationSpace.to(data.convo).emit("friendTyping", data.user)
+  });
+
+
+  //Check if friend is online:
+  // socket.emit('isFriendOnline', {convo: "<%= conversation._id %>"});
+
+  socket.on('isFriendInConvo', (data) => {
+
+    var friendIsInConvo = conversationSpace.sockets.clients(data.convo).find(user => !user._id.equals(socket.handshake.session.user._id));
+
+    if(friendIsInConvo)
+      conversationSpace.to(data.convo).emit('friendIsInConvo', {user: friendIsOnline});
+    else
+      conversationSpace.to(data.convo).emit('friendIsNotInConvo');
+
+
+  });
+
+
+
 });
 
+
+//the main io handles all connections:
+
+io.on('connection', () => {
+
+  //check if the socket.handshake.session.user._id is within our hashmap of online users
+    //=>if not, add the user to our hashmap
+    //Or, do nothing.
+
+
+
+});
+
+io.on('disconnect', () => {
+
+  //check if there is a user associated with the socket
+    //if so => remove from hashmap
+    //Or, do nothing.
+
+});
+
+io.on('getListOfOnlineFriends', (data) => {
+
+  //search hashmap for all of the id's of the friend and add each friend to the online list.
+
+  //Need to do this more efficiently, I don't want to search for all friends every time I want to display...
+
+  //Ideas => add array attribute to user objects that holds all online users
+    //=>however, I would need to update all arrays when a user logs out....
+
+});
 
 
 io.set('authorization', (handshakeData, accept) => {

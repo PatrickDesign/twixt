@@ -7,10 +7,79 @@
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script type="text/javascript">
 
+	
 
 	var socket = io('/conversations');
 
+	var typingTimeout,
+		timeoutCleared = true;
+
 	socket.emit('convoJoin', {convoID: "<%= conversation._id %>"});
+
+
+	//user is in convo notification===================================
+
+	//initially check if friend is online.
+	socket.emit('isFriendInConvo', {convo: "<%= conversation._id %>"});
+
+	//every 30 seconds, ask the server if the friend is online
+	var checkIfFriendOnline = setInterval(() => {
+		socket.emit('isFriendInConvo', {convo: "<%= conversation._id %>"});
+	}, 30000);
+
+
+	//Todo, improve the front end of these notifications:
+
+	socket.on('friendIsInConvo', (data) => {
+		$("#inConvoIndicator").val(`${friend.username} is online...`);
+	});
+
+	socket.on('friendIsNotConvo', () => {
+		$("#inConvoIndicator").val(`${friend.username} is offline...`);
+	});
+
+	//================================================================
+
+	//User is typing notification=====================================
+	$(".messageForm").on("keydown", function(){
+
+    	// if(e.keyCode === 13){
+    	// 	e.preventDefault();
+    	// 	$("#messageSubmit").click()
+    	// }
+
+    	if(timeoutCleared){
+    		socket.emit('imTyping', {user: currentUser, convo: "<%= coonversation._id %>"});
+    		timeoutCleared = false;
+    		typingTimeout = setTimeout(() => {
+    			timeoutCleared = true;
+    		}, 3000);
+    	}
+
+    });
+
+
+	//Flash '<username> is typing'
+    socket.on('friendTyping', (data) => {
+
+    	$("#typingNotification").val(`${data.user.username} is typing...`);
+
+    	var typeFlash = setInterval(() => {
+    		$("#typingNotification").fadeIn("slow", () => {
+    			$("#typingNotification").fadeOut("slow");
+    		});
+    	}, 500);
+
+    	//after 3 seconds, stop the above interval flashing.
+    	var clearTypeNotification = setTimeout(() => {
+    		clearInterval(typeFlash);
+    		$("#typingNotification").fadeOut("slow");
+    	}, 3000);
+
+    });
+
+	//================================================================
+    
 
 
 	//send a message
