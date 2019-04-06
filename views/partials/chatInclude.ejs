@@ -22,20 +22,21 @@
 	//initially check if friend is online.
 	socket.emit('isFriendInConvo', {convo: "<%= conversation._id %>"});
 
-	//every 30 seconds, ask the server if the friend is online
+	//every 10 seconds, ask the server if the friend is online
 	var checkIfFriendOnline = setInterval(() => {
 		socket.emit('isFriendInConvo', {convo: "<%= conversation._id %>"});
-	}, 30000);
+	}, 10000);
 
 
 	//Todo, improve the front end of these notifications:
 
 	socket.on('friendIsInConvo', (data) => {
-		$("#inConvoIndicator").val(`${friend.username} is online...`);
+		$("#inConvoIndicator").text(`${data.user.username} is in the conversation...`);
 	});
 
-	socket.on('friendIsNotConvo', () => {
-		$("#inConvoIndicator").val(`${friend.username} is offline...`);
+	socket.on('friendIsNotInConvo', () => {
+		// alert("NOT IN CONVO");
+		$("#inConvoIndicator").text(`<%= friend.username %> is not in the convo...`);
 	});
 
 	//================================================================
@@ -49,7 +50,7 @@
     	// }
 
     	if(timeoutCleared){
-    		socket.emit('imTyping', {user: currentUser, convo: "<%= coonversation._id %>"});
+    		socket.emit('imTyping', {user: currentUser, convo: "<%= conversation._id %>"});
     		timeoutCleared = false;
     		typingTimeout = setTimeout(() => {
     			timeoutCleared = true;
@@ -62,7 +63,7 @@
 	//Flash '<username> is typing'
     socket.on('friendTyping', (data) => {
 
-    	$("#typingNotification").val(`${data.user.username} is typing...`);
+    	$("#typingNotification").text(`${data.user.username} is typing...`);
 
     	var typeFlash = setInterval(() => {
     		$("#typingNotification").fadeIn("slow", () => {

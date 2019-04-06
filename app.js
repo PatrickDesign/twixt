@@ -1248,12 +1248,30 @@ conversationSpace.on('connection', (socket) => {
 
   socket.on('isFriendInConvo', (data) => {
 
-    var friendIsInConvo = conversationSpace.sockets.clients(data.convo).find(user => !user._id.equals(socket.handshake.session.user._id));
+    var friend;
 
-    if(friendIsInConvo)
-      conversationSpace.to(data.convo).emit('friendIsInConvo', {user: friendIsOnline});
-    else
-      conversationSpace.to(data.convo).emit('friendIsNotInConvo');
+    //Todo: fix this linen!!!
+    var friendIsInConvo = io.of('/conversations').in(data.convo).clients((error, clients) => {
+
+      friend = clients.find(client => conversationSpace.connected[client].handshake.session.user._id !== socket.handshake.session.user._id); //use FIND
+
+      // if(typeof friend === 'object'){
+      if(friend)
+        conversationSpace.connected[socket.id].emit('friendIsInConvo', {user: conversationSpace.connected[friend].handshake.session.user});
+      
+      else{
+        conversationSpace.connected[socket.id].emit('friendIsNotInConvo');
+        console.log('emitting');
+      }
+
+      // clients.forEach((client) => {
+      //   console.log(conversationSpace.connected[client].handshake.session.user._id);
+      // })
+
+      // friend = clients.find(client => (client != socket.id));
+    });
+
+    
 
 
   });

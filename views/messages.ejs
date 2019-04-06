@@ -1,11 +1,11 @@
 <% include partials/sourceHeader %>
 <%
 
-	var friend = conversation.users.findIndex(user => !user._id.equals(currentUser._id));
+	var friend = conversation.users.find(user => !user._id.equals(currentUser._id));
 
 %>
 
-<h1>Talk to <%= conversation.users[friend].username %>! </h1> 
+<h1>Talk to <%= friend.username %>! </h1> 
 
 <% include partials/conversation %>
 
