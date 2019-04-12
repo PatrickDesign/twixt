@@ -41,6 +41,18 @@
 
 <hr>
 
+<div class="userMetric" onclick="toggle_visibility('onlineFriends');"><h3>Online Friends <i class="fa fa-caret-down"></i> </h3></div>
+<div id="onlineFriends" style="display:none;">
+  <hr>
+ <!--  <div class="userMetricElement">Comment 1</div>
+  <div class="userMetricElement">Comment 2</div>
+  <div class="userMetricElement">Comment 3</div> -->
+  <% var followerSource = onlineFriends %>
+  <% include partials/userList %>
+</div>
+
+<hr>
+
 <div class="userMetric" onclick="toggle_visibility('followers');"><h3>Followers <i class="fa fa-caret-down"></i> </h3></div>
 <div id="followers" style="display:none;">
   <hr>
@@ -71,8 +83,6 @@
   <hr>
 
   <form method="POST" action="/users/<%= currentUser._id %>/update">
-
-  <form action="/register" method="POST">
     <h1>Update your account details:</h1>
     <p>Modify your avatar or account bio!</p>
     <hr>
@@ -96,7 +106,6 @@
     </div>
     <br>
     <button style="margin-top: 5px;" class="btn btn-primary" onclick="validate()">Update your account!</button>
-  </form>
 </div>
 
   </form>
