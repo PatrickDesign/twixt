@@ -12,6 +12,10 @@
 
 	var io = io();
 
+	$("#logoutButton").on("click", () => {
+		io.emit('logout');
+	});
+
 	
 
 </script>

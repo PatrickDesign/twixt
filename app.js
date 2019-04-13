@@ -1,24 +1,24 @@
 ////Todo's:
 //1.) IMPROVE FRONT END ROUGH EDGES
 //1a) NAVBAR
-//2.) Create edit project page
-//2a) Allow owners to add updates easily to projects
+//2.) Create edit project page //DONE
+//2a) Allow owners to add updates easily to projects //DONE
 //3.) Special outline for project owners in comments section of their projects
-//4.) Finish User dashboard
-//5.) Create 'money' form to 'donate'
+//4.) Finish User dashboard //DONE
+//5.) Create 'money' form to 'donate' //DONE
 
 //6.) Organize codebase
 
 //TODO:
-//Follow users
-//create a user 'view' like dashboard, but for another user.
-//Display 'following users'
+//Follow users DONE
+//create a user 'view' like dashboard, but for another user. DONE
+//Display 'following users' DONE
 
-//populate social feed with something.
+//populate social feed with something. DONE
 
 //APRIL 5 TODOS:
 //Implement the backend for 'user is typing' in coversations //Prototyped :)
-//Implement 'user is online' whenever a user is online (on any part of the site, not just the conversation page)
+//Implement 'user is online' whenever a user is online (on any part of the site, not just the conversation page) //Working
 //Although, we should also create a notification like snapchat that shows if the other user IS in the convo page 
 //at the time. //Prototyped :)
 
@@ -126,8 +126,14 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.sdgCategories = ["No Poverty", "Zero Hunger", "Good Health and Well-Being", "Quality Education", "Gender Equality", "Clean Water and Sanitation", "Affordable and Clean Energy", "Decent Work and Economic Growth", "Industry, Innovation and Infastructure", "Reduced Inequalities", "Sustainable Cities and Communities", "Responsible Production and Consumption", "Climate Action", "Life Below Water", "Life On Land", "Peace, Justice and Strong Institutions", "Partnerships for the Goals"];
+
+    //pass the online friends list to every view:
+    if (req.user)
+        res.locals.onlineFriends = client.smembers(req.user._id.toString());
     next();
 });
+
+
 
 
 
@@ -664,6 +670,19 @@ app.post("/login", passport.authenticate("local", {
 });
 
 app.get("/logout", (req, res) => {
+
+    //deal with online status....
+    // removeFromDisconnectedList(req.user._id);
+
+    // removeUserFromOnlineLists(req.user._id.toString());
+
+
+    removeUserFromOnlineLists(req.user._id.toString());
+    client.del(req.user._id.toString()); //delete user from online map
+
+    console.log("Deleted logged out user from all lists...");
+
+    // client.del(req.user._id.toString()); //delete  from online map
     req.logout();
     res.redirect("/");
 })
@@ -1171,40 +1190,40 @@ conversationSpace.on('connection', (socket) => {
 
 //==================================
 
-async function printFriendsList(socket) {
-    if (socket.handshake.session && socket.handshake.session.user) {
+// async function printFriendsList(socket) {
+//     if (socket.handshake.session && socket.handshake.session.user) {
 
-        client.exists(socket.handshake.session.user._id.toString(), async (err, exists) => {
-            if (err)
-                consol.log(err);
-            else {
-                if (exists) {
+//         client.exists(socket.handshake.session.user._id.toString(), async (err, exists) => {
+//             if (err)
+//                 consol.log(err);
+//             else {
+//                 if (exists) {
 
-                    // client.llen(socket.handshake.session.user._id.toString(), (err, foundLength) => {
-                    //     if (err)
-                    //         console.log(err);
-                    //     else {
-                    //         if (foundLength)
-                    //             console.log("================ONLINE FRIENDS================");
+//                     // client.llen(socket.handshake.session.user._id.toString(), (err, foundLength) => {
+//                     //     if (err)
+//                     //         console.log(err);
+//                     //     else {
+//                     //         if (foundLength)
+//                     //             console.log("================ONLINE FRIENDS================");
 
-                    //     }
-                    // });
-                    // const onlineFriends = await client.hgetall(socket.handshake.session.user._id, (err, friends) => {
-                    //     console.log(friends);
-                    // });
-                    // onlineFriends.forEach((friend) => {
-                    //     console.log(JSON.parse(friend).username);
-                    // })
-                }
-            }
-        });
+//                     //     }
+//                     // });
+//                     // const onlineFriends = await client.hgetall(socket.handshake.session.user._id, (err, friends) => {
+//                     //     console.log(friends);
+//                     // });
+//                     // onlineFriends.forEach((friend) => {
+//                     //     console.log(JSON.parse(friend).username);
+//                     // })
+//                 }
+//             }
+//         });
 
-        // socket.handshake.session.onlineFriendsList.forEach((friend) => {
-        //   friend = JSON.parse(friend);
-        //   console.log(friend.username);
-        // });
-    }
-}
+//         // socket.handshake.session.onlineFriendsList.forEach((friend) => {
+//         //   friend = JSON.parse(friend);
+//         //   console.log(friend.username);
+//         // });
+//     }
+// }
 
 
 
@@ -1233,7 +1252,7 @@ async function checkForUser(socket) {
 
     if (socket.handshake.session && socket.handshake.session.user) //check if we have a logged in user
 
-        client.exists(socket.handshake.session.user._id.toString(), function(err, foundUser) {
+        client.exists(socket.handshake.session.user._id.toString(), (err, foundUser) => {
 
             //If we don't have an entry for this user yet, generate a new online friends list!
             if (!foundUser) {
@@ -1324,10 +1343,17 @@ function removeFromDisconnectedList(user) {
 
 io.on('connection', (socket) => {
 
+
+
+
+    socket.on('logout', () => {
+        if (socket.handshake.session && socket.handshake.session.user) {
+            delete socket.handshake.session.user;
+            socket.handshake.session.save();
+        }
+    });
+
     checkForUser(socket);
-
-
-
 
 
 
@@ -1339,9 +1365,8 @@ io.on('connection', (socket) => {
 
         //send an alert that we disconnected,
 
-        if (socket.handshake.session && socket.handshake.session.user) {
+        if (socket.handshake.session && socket.handshake.session.user)
             addToDisconnectList(socket);
-        }
 
     });
 
@@ -1361,7 +1386,7 @@ function asyncSetCheck(listToCheck, member) {
     return new Promise(resolve => {
         const inList = client.sismember(listToCheck, member, (err, reply) => {
             resolve(reply);
-        })
+        });
     });
 }
 
@@ -1385,24 +1410,48 @@ async function addToDisconnectList(socket) {
 
     //add to a list of users we are waiting to reconnect.
     console.log(`adding ${socket.handshake.session.user.username} to disconnected list...`);
-    client.sadd('disconnectedUsers', socket.handshake.session.user._id);
+    client.sadd('disconnectedUsers', socket.handshake.session.user._id.toString());
 
 
-    const userStillDisconnected = await checkDisconnectedList(socket.handshake.session.user._id);
-
+    const userStillDisconnected = await checkDisconnectedList(socket.handshake.session.user._id.toString());
     //if they are still disconnected, remove their entry in redis
     if (userStillDisconnected) {
         console.log(`Removing ${socket.handshake.session.user.username} from online list!`);
-        client.srem('disconnectedUsers', socket.handshake.session.user._id); //remove user from disconnected list.
-        client.del(socket.handshake.session.user._id); //delete user from online map
+        client.srem('disconnectedUsers', socket.handshake.session.user._id.toString()); //remove user from disconnected list.
 
 
-        //TODO: NEXT!!!! remove this user_id from all connected friends online lists'
+        //Remove this user_id from all connected friends online lists'
+        removeUserFromOnlineLists(socket.handshake.session.user._id.toString());
+
+        client.del(socket.handshake.session.user._id.toString()); //delete user from online map
 
     } else {
         console.log(`${socket.handshake.session.user.username} has returned online!`);
     }
 
+}
+
+
+//This function will loop though the user's online friends list,
+//and remove user from their lists:
+function removeUserFromOnlineLists(user) {
+
+    client.smembers(user, async (err, onlineFriends) => {
+        if (err)
+            console.log(err);
+        else {
+
+            //remove user from all lists in (reply):
+            for (const listToRemoveFrom of onlineFriends) {
+
+                //check if the list we are about to remove from still exists:
+                client.exists(listToRemoveFrom, (err, exists) => {
+                    if (exists)
+                        client.srem(listToRemoveFrom, user); //remove user from friend's online list
+                });
+            }
+        }
+    });
 }
 
 
