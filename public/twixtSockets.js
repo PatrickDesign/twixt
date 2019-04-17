@@ -13,30 +13,16 @@
 //     }
 // });
 
-
 //Functinos to run when page loads
-$(document).ready(function ()
-{
+$(document).ready(function() {
+  $("#categorySelect").on("change", function() {
+    $("#categoryForm").submit();
+  });
 
-
-
-    $("#categorySelect").on("change", function ()
-    {
-        $("#categoryForm").submit();
-
-    });
-
-    
-
-	$(".messageForm").on("keyup", function(e){
-
-    	if(e.keyCode === 13){
-    		e.preventDefault();
-    		$("#messageSubmit").click()
-    	}
-
-    });
-
-
-
+  $(".messageForm").on("keyup", function(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      $("#messageSubmit").click();
+    }
+  });
 });
