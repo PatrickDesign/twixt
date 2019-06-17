@@ -1,23 +1,20 @@
-var mongoose = require('mongoose');
-const connectionString = require('./connectionString');
+var mongoose = require("mongoose");
+const connectionString = require("./connectionString");
 
 mongoose.connect(connectionString, { useNewUrlParser: true });
 
 var connection = mongoose.connection;
 
-connection.on('connected', () =>
-{
+connection.on("connected", () => {
   console.log("Connected to Source DB");
 });
 
-connection.on('disconnected', () =>
-{
+connection.on("disconnected", () => {
   console.log("Disconnected from DB");
   connection.close();
 });
 
-connection.on('error', () =>
-{
+connection.on("error", () => {
   console.log("DB Connection Error...");
 });
 
