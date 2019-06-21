@@ -29,6 +29,9 @@
 //Although, we should also create a notification like snapchat that shows if the other user IS in the convo page
 //at the time. //Prototyped :)
 
+//Existing issues:
+//Users can login multiple times
+
 //Includes====================================================
 var express = require("express");
 // var jwt = require("jsonwebtoken");
