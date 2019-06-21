@@ -16,7 +16,7 @@
                         <ul class="media-list">
 
                         <% followerSource.forEach((connectedUser) => { %>
-                        
+                            <% if(connectedUser.username != currentUser.username){ %>
                             <li class="media commentContainer">
                                 <a href="/users/<%=connectedUser._id%>" class="pull-left">
                                     <img src="<%=connectedUser.avatar%>" alt="" class="img-circle">
@@ -26,6 +26,8 @@
                                         <%= connectedUser.username %> </a>.
                                     </p>
                             </li>
+
+                            <% } %>
                         
                         <% }); %>
 

@@ -135,10 +135,10 @@ app.use((req, res, next) => {
   ];
 
   //pass the online friends list to every view:
-  if (req.user)
-    res.locals.onlineFriends = JSON.parse(
-      client.smembers(req.user._id.toString())
-    );
+  // if (req.user)
+  //   res.locals.onlineFriends = JSON.parse(
+  //     client.smembers(req.user._id.toString())
+  //   );
   next();
 });
 
@@ -486,7 +486,29 @@ app.get("/dashboard", (req, res) => {
     .exec((err, foundUser) => {
       if (err) console.log(err);
       else {
-        res.render("dashboard", { user: foundUser });
+        // client.smembers(user, async (err, onlineFriends) => {
+
+        // console.log(JSON.parse(client.smembers(req.user._id.toString(), async (err, onlineFriends) => {
+
+        // })));
+        let onlineFriends = [];
+        client.smembers(req.user._id.toString(), async (err, onlineList) => {
+          if (err) console.log(err);
+          else {
+            onlineFriends = [];
+            onlineList.forEach(onlineFriend => {
+              onlineFriends.push(JSON.parse(onlineFriend));
+            });
+
+            // console.log(onlineFriends.username + "!!!");
+            res.render("dashboard", {
+              user: foundUser,
+              onlineFriends
+            });
+          }
+        });
+
+        // console.log(onlineFriends + "!!");
       }
     });
 });
@@ -582,7 +604,11 @@ app.post(
 
 app.get("/logout", (req, res) => {
   //deal with online status....
-  removeUserFromOnlineLists(req.user._id.toString());
+  console.log(
+    req.user.username +
+      " is logging out now!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  );
+  removeUserFromOnlineLists(req.user);
   client.del(req.user._id.toString()); //delete user from online map
 
   //actually log the user out and redirect to the home page :)
@@ -1072,10 +1098,12 @@ async function checkForUser(socket) {
             u_id = u_user._id,
             u_username = u_user.username,
             u_bio = u_user.bio,
+            u_avatar = u_user.avatar,
             jsonUser = JSON.stringify({
               _id: u_id,
               username: u_username,
-              bio: u_bio
+              bio: u_bio,
+              avatar: u_avatar
             });
 
           var onlineFriends = [];
@@ -1098,13 +1126,19 @@ async function checkForUser(socket) {
                     numOnline++;
                     console.log(follower.username + " is online!");
 
+                    client.sadd(follower._id.toString(), jsonUser);
+
+                    //push the current online friend to our new user list
                     onlineFriends.push(
                       JSON.stringify({
                         _id: follower._id.toString(),
                         username: follower.username,
-                        bio: follower.bio
+                        bio: follower.bio,
+                        avatar: follower.avatar
                       })
                     );
+
+                    //add our user to our online-friends' friends list... :)
                   }
                 }
                 // foundUser.followers.forEach(async (follower) => {
@@ -1234,28 +1268,45 @@ async function addToDisconnectList(socket) {
     ); //remove user from disconnected list.
 
     //Remove this user_id from all connected friends online lists'
-    removeUserFromOnlineLists(socket.handshake.session.user._id.toString());
+    removeUserFromOnlineLists(socket.handshake.session.user);
 
     client.del(socket.handshake.session.user._id.toString()); //delete user from online map
   } else {
-    console.log(
-      `${socket.handshake.session.user.username} has returned online!`
+    client.exists(
+      socket.handshake.session.user._id.toString(),
+      (err, exists) => {
+        if (err) console.log(err);
+        if (exists)
+          console.log(
+            `${socket.handshake.session.user.username} has returned online!`
+          );
+      }
     );
   }
 }
 
 //This function will loop though the user's online friends list,
 //and remove user from their lists:
-function removeUserFromOnlineLists(user) {
-  client.smembers(user, async (err, onlineFriends) => {
+function removeUserFromOnlineLists({ _id, username, bio, avatar }) {
+  client.smembers(_id.toString(), async (err, onlineFriends) => {
     if (err) console.log(err);
     else {
+      var user = {
+        _id,
+        username,
+        bio,
+        avatar
+      };
+      var currentFriend;
       //remove user from all lists in (reply):
       for (const listToRemoveFrom of onlineFriends) {
-        //check if the list we are about to remove from still exists:
-        client.exists(listToRemoveFrom, (err, exists) => {
-          if (exists) client.srem(listToRemoveFrom, user); //remove user from friend's online list
-        });
+        currentFriend = JSON.parse(listToRemoveFrom);
+        if (!currentFriend._id !== user._id)
+          client.exists(currentFriend._id.toString(), (err, exists) => {
+            if (exists) {
+              client.srem(currentFriend._id, JSON.stringify(user)); //remove user from friend's online list
+            }
+          });
       }
     }
   });
