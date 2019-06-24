@@ -137,11 +137,6 @@ app.use((req, res, next) => {
     "Partnerships for the Goals"
   ];
 
-  //pass the online friends list to every view:
-  // if (req.user)
-  //   res.locals.onlineFriends = JSON.parse(
-  //     client.smembers(req.user._id.toString())
-  //   );
   next();
 });
 
@@ -607,10 +602,6 @@ app.post(
 
 app.get("/logout", (req, res) => {
   //deal with online status....
-  console.log(
-    req.user.username +
-      " is logging out now!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  );
   removeUserFromOnlineLists(req.user);
   client.del(req.user._id.toString()); //delete user from online map
 
@@ -1204,6 +1195,30 @@ io.on("connection", socket => {
 
   checkForUser(socket);
 
+  socket.on("getListOfOnlineFriends", () => {
+    //search hashmap for all of the id's of the friend and add each friend to the online list.
+    //Need to do this more efficiently, I don't want to search for all friends every time I want to display...
+    //Ideas => add array attribute to user objects that holds all online users
+    //=>however, I would need to update all arrays when a user logs out....
+
+    client.smembers(
+      socket.handshake.session.user._id.toString(),
+      (err, onlineList) => {
+        if (err) console.log(err);
+        else {
+          console.log("SENDING LIST");
+          var onlineFriends = [];
+
+          for (const friend of onlineList)
+            onlineFriends.push(JSON.parse(friend));
+
+          socket.emit("onlineListResponse", onlineFriends);
+          console.log(onlineFriends);
+        }
+      }
+    );
+  });
+
   socket.on("disconnect", () => {
     //check if there is a user associated with the socket
     //if so => remove from hashmap
@@ -1314,13 +1329,6 @@ function removeUserFromOnlineLists({ _id, username, bio, avatar }) {
     }
   });
 }
-
-io.on("getListOfOnlineFriends", data => {
-  //search hashmap for all of the id's of the friend and add each friend to the online list.
-  //Need to do this more efficiently, I don't want to search for all friends every time I want to display...
-  //Ideas => add array attribute to user objects that holds all online users
-  //=>however, I would need to update all arrays when a user logs out....
-});
 
 io.set("authorization", (handshakeData, accept) => {
   //  console.log(handshakeData.headers);

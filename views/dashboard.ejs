@@ -41,19 +41,21 @@
 
 <hr>
 
-<div class="userMetric" onclick="toggle_visibility('onlineFriends');"><h3>Online Friends <i class="fa fa-caret-down"></i> </h3></div>
-<div id="onlineFriends" style="display:none;">
-  <hr>
- <!--  <div class="userMetricElement">Comment 1</div>
-  <div class="userMetricElement">Comment 2</div>
-  <div class="userMetricElement">Comment 3</div> -->
-  <% if(onlineFriends && onlineFriends.length > 0){ %>
-  <%    var followerSource = onlineFriends %>
-  <%    include partials/userList %>
-  <%  } %>
-</div>
 
-<hr>
+<% if(onlineFriends && onlineFriends.length > 1){ %>
+  <div class="userMetric" onclick="toggle_visibility('onlineFriends');"><h3>Online Friends <i class="fa fa-caret-down"></i> </h3></div>
+  <div id="onlineFriends" style="display:none;">
+    <hr>
+  <!--  <div class="userMetricElement">Comment 1</div>
+    <div class="userMetricElement">Comment 2</div>
+    <div class="userMetricElement">Comment 3</div> -->
+    <%    var followerSource = onlineFriends %>
+    <%    include partials/userList %>
+  </div>
+  <hr>
+<%  } %>
+
+
 
 <div class="userMetric" onclick="toggle_visibility('followers');"><h3>Followers <i class="fa fa-caret-down"></i> </h3></div>
 <div id="followers" style="display:none;">
@@ -115,16 +117,29 @@
 
 <hr>
 
-
+<script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script type="text/javascript">
 
-    function toggle_visibility(id) {
-       var x = document.getElementById(id);
-       if(x.style.display == 'block')
-          x.style.display = 'none';
-       else
-          x.style.display = 'block';
-    }
+  var io = io();
+
+  var onlineFriendInterval = setInterval(() => {
+    io.emit("getListOfOnlineFriends");
+  }, 10000);
+
+  io.on("onlineListResponse", (data) => {
+    console.log(data + "!!");
+  })
+
+
+
+
+  function toggle_visibility(id) {
+      var x = document.getElementById(id);
+      if(x.style.display == 'block')
+        x.style.display = 'none';
+      else
+        x.style.display = 'block';
+  }
 </script>
 
 <% include partials/sourceFooter %>
