@@ -144,6 +144,23 @@ app.use((req, res, next) => {
 
 //ROUTES=========================
 
+
+//GameRoutes====================
+app.get("/games", (req, res) => {
+
+  User.findById(req.user._id).populate("followedUsers").exec((err, foundUser) => {
+
+      if(err)
+        //display a friendly page to create an account, or maybe even have a game demo here
+        console.log(err);
+      else{
+        return res.render("games.ejs", {user: foundUser});
+      }
+
+  });
+
+});
+
 //MessageRoutes==================
 
 //Show all conversations for a user
