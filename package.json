@@ -40,7 +40,7 @@
     "is-arrayish": "^0.3.2",
     "is-fullwidth-code-point": "^2.0.0",
     "is-utf8": "^0.2.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lcid": "^2.0.0",
     "load-json-file": "^5.2.0",
     "minimatch": "^3.0.4",
